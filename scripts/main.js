@@ -1,6 +1,3 @@
-/**
- * Created by jjf001 on 14-1-23.
- */
 
 /**
  *
@@ -15,20 +12,39 @@ var Config = {
     SIZE: {
         length: 20
     },
-
     DIRECTION: {
         up: 0,
         right: 1,
         down: 2,
         left: 3
-    }
+    },
+    IMAGE: {
+        src: 'pics/dot.jpg'
+    },
+    FPS : 1000,
+    SECONDS_BETWEEN_FRAMES : 1 / this.FPS,
+    RATE : 50 * this.SECONDS_BETWEEN_FRAMES
 }
+
+
+var canvas,
+    context,
+    dot = new Image();
+
+canvas = document.getElementById('canvas');
+context = canvas.getContext('2d');
+
+canvas.width = Config.CANVAS.width;
+canvas.height = Config.CANVAS.height;
+
+dot.src = Config.IMAGE.src;
 
 /**
  *
  * @param x
  * @param y
  * @constructor
+ * 每个节点
  */
 function Node(x, y) {
     this.length = Config.SIZE.length;
@@ -37,11 +53,10 @@ function Node(x, y) {
 }
 
 /**
- *
  * @constructor
+ * 食物
  */
-function Food(context){
-    this.context = context;
+function Food(){
     var stepX = Config.CANVAS.width / Config.SIZE.length - 1;
     var stepY = Config.CANVAS.height / Config.SIZE.length - 1;
     var x = Math.ceil(Math.random() * stepX) * Config.SIZE.length;
@@ -50,22 +65,19 @@ function Food(context){
 }
 
 /**
- *
  * @private
+ * 绘制食物
  */
 Food.prototype._draw = function(){
-    this.context.fillRect(this.x, this.y, Config.SIZE.length, Config.SIZE.length);
+    context.drawImage(dot,this.x, this.y);
 }
 
 /**
- *
- * @param context
  * @constructor
  */
-function Snake(context) {
-    this.context = context;
+function Snake() {
     this.body = [];
-    this.food = new Food(this.context);
+    this.food = new Food();
     this.direction = Config.DIRECTION.right;
     this.speed = 100;
 
@@ -75,49 +87,51 @@ function Snake(context) {
 }
 
 /**
- *
+ * 初始化snake
  */
 Snake.prototype.init = function () {
     var x = Config.SIZE.length * 10;
     var y = Config.SIZE.length * 10;
+
+    // 生成snake
     for (var i = 0; i < 8; i++) {
         this.body.push(new Node(x - Config.SIZE.length * i, y));
     }
+    
     this._bind();
     this._draw();
 };
 
 /**
- *
- * @private
+ * 绑定事件
  */
 Snake.prototype._bind = function(){
-    var that = this;
+    var _this = this;
     $(window).keydown(function(event){
         switch(event.keyCode) {
             case 38:
-                if(that.direction == Config.DIRECTION.down){
+                if(_this.direction == Config.DIRECTION.down){
                     return;
                 }
-                that.direction = Config.DIRECTION.up;
+                _this.direction = Config.DIRECTION.up;
                 break;
             case 39:
-                if(that.direction == Config.DIRECTION.left){
+                if(_this.direction == Config.DIRECTION.left){
                     return;
                 }
-                that.direction = Config.DIRECTION.right;
+                _this.direction = Config.DIRECTION.right;
                 break;
             case 40:
-                if(that.direction == Config.DIRECTION.up){
+                if(_this.direction == Config.DIRECTION.up){
                     return;
                 }
-                that.direction = Config.DIRECTION.down;
+                _this.direction = Config.DIRECTION.down;
                 break;
             case 37:
-                if(that.direction == Config.DIRECTION.right){
+                if(_this.direction == Config.DIRECTION.right){
                     return;
                 }
-                that.direction = Config.DIRECTION.left;
+                _this.direction = Config.DIRECTION.left;
                 break;
         }
     });
@@ -128,10 +142,9 @@ Snake.prototype._bind = function(){
  * @private
  */
 Snake.prototype._draw = function () {
-    this.context.clearRect(0, 0, Config.CANVAS.width, Config.CANVAS.height);
-    this.context.fillStyle = "#00ff00";
+    context.clearRect(0, 0, Config.CANVAS.width, Config.CANVAS.height);
     for (var i = 0; i < this.body.length; i++) {
-        this.context.fillRect(this.body[i].x, this.body[i].y, this.body[i].length, this.body[i].length);
+        context.drawImage(dot,this.body[i].x, this.body[i].y);
     }
     this.food._draw();
 };
@@ -159,63 +172,96 @@ Snake.prototype.isEatenMySelf = function(){
     return false;
 };
 
+Snake.prototype._onDie = function(){
+    if(this.onDie){
+        this.onDie.call(this);
+    }
+    this.stop();
+}
+
+
 /**
- *
+ * snake移动
  */
 Snake.prototype._move = function () {
+
+    // 是否咬到自己
     if(this.isEatenMySelf()){
-        if(this.onDie){
-            this.onDie.call(this);
-        }
+        this._onDie();
         return;
     }
 
+    // 吃到食物
     if(this.isEatenFood()){
         if(this.onEaten){
             this.onEaten.call(this);
         }
 
         this.body.unshift(this.food);
-        this.food = new Food(this.context);
+        this.food = new Food();
     }
 
     this.body.pop();
     var headX = this.body[0].x;
     var headY = this.body[0].y;
+
+    // 判断方向
     switch (this.direction) {
         case Config.DIRECTION.up:
             if(headY <= 0)
             {
                 headY = Config.CANVAS.height;
+                this._onDie();
+                return;
             }
             this.body.unshift(new Node(headX, headY - Config.SIZE.length));
             break;
         case Config.DIRECTION.right:
             if(headX >= Config.CANVAS.width - Config.SIZE.length){
                 headX = -Config.SIZE.length;
+                this._onDie();
+                return;
             }
             this.body.unshift(new Node(headX + Config.SIZE.length, headY));
             break;
         case Config.DIRECTION.down:
             if(headY >= Config.CANVAS.height - Config.SIZE.length){
                 headY = -Config.SIZE.length;
+                this._onDie();
+                return;
             }
             this.body.unshift(new Node(headX, headY + Config.SIZE.length));
             break;
         case Config.DIRECTION.left:
             if(headX <= 0){
                 headX = Config.CANVAS.width;
+                this._onDie();
+                return;
             }
             this.body.unshift(new Node(headX - Config.SIZE.length, headY));
             break;
     }
+
     this._draw();
-    setTimeout($.proxy(this._move, this), this.speed);
 };
 
 /**
- *
+ * 开始移动
  */
 Snake.prototype.start = function(){
-    this._move();
+    var _this = this;
+    var num = setInterval(function(){
+        _this._move();
+    },_this.speed);
+
+    _this.starNum = num;
+
+};
+
+
+/**
+ * 停止移动
+ */
+Snake.prototype.stop = function(){
+    clearInterval(this.starNum);
 };

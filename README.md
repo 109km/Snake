@@ -1,4 +1,5 @@
 Snake
 =====
 
-snake game base on HTML5 canvas
+A snake game base on HTML5 canvas.
+

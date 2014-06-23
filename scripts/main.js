@@ -1,16 +1,18 @@
 
+
 /**
  *
  * @type {{CANVAS: {width: number, height: number}, SIZE: {length: number}}}
  */
+
 var Config = {
     CANVAS: {
-        width: 800,
-        height: 600
+        width: 980,
+        height: 589
     },
-
+    START_NUM : 4,
     SIZE: {
-        length: 20
+        length: 55
     },
     DIRECTION: {
         up: 0,
@@ -79,7 +81,7 @@ function Snake() {
     this.body = [];
     this.food = new Food();
     this.direction = Config.DIRECTION.right;
-    this.speed = 100;
+    this.speed = 200;
 
     //event
     this.onEaten = null;
@@ -94,7 +96,7 @@ Snake.prototype.init = function () {
     var y = Config.SIZE.length * 10;
 
     // 生成snake
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < Config.START_NUM; i++) {
         this.body.push(new Node(x - Config.SIZE.length * i, y));
     }
     

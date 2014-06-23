@@ -2,20 +2,16 @@
 <html>
 <head>
     <title>Snake</title>
-    <style>
-        canvas{ background: #000; margin: 0 auto; float: left; }
-        p{float: left;margin-left: 30px;}
-    </style>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <script src="scripts/jquery-1.10.2.min.js"></script>
 </head>
 <body>
-    <canvas id="canvas" width="800px" height="600px"></canvas>
-    <p>
-        Score: <span id="score">0</span>
-    </p>
-    <audio id="startMusic" src="music/start.ogg" autoplay="autoplay"></audio>
-    <audio id="bgMusic" src="music/bgMusic.ogg" loop="loop"></audio>
-    <audio id="fireMusic" src="music/fire.ogg"></audio>
-    <script src="scripts/jquery-1.10.2.min.js"></script>
+    <div id="main">
+        <span id="score">0</span>
+        <span id="start"></span>
+        <canvas id="canvas"></canvas>
+    </div>
+
     <script src="scripts/main.js"></script>
     <script>
         var score = 0;
@@ -26,10 +22,15 @@
         //Render();
         snake.init();
         snake.onEaten = function(){
-            score += 10;
+            score += 1;
             $('#score').text(score);
         };
-        snake.start();
+
+        $('#start').click(function(){
+            snake.start();
+        });
+
+
 
     </script>
 </body>

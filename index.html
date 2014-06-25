@@ -8,28 +8,65 @@
 <body>
     <div id="main">
         <span id="score">0</span>
-        <span id="start"></span>
         <canvas id="canvas"></canvas>
+
+        <div class="start_page">
+
+            <div class="beans">
+                <a class="bean bean01" href="javascript:;" bean_style="1"></a>
+                <a class="bean bean02" href="javascript:;" bean_style="2"></a>
+                <a class="bean bean03" href="javascript:;" bean_style="3"></a>
+                <a class="bean bean04" href="javascript:;" bean_style="4"></a>
+            </div>
+            <a id="start" href="javascript:;"></a>
+            <div class="game_introduction">
+                游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
+            </div>
+        </div>
     </div>
 
     <script src="scripts/main.js"></script>
     <script>
-        var score = 0;
-        //var canvas = document.getElementById('canvas');
-        //var context = canvas.getContext('2d');
-        var snake = new Snake();
 
-        //Render();
-        snake.init();
-        snake.onEaten = function(){
-            score += 1;
-            $('#score').text(score);
-        };
+        $(function(){
+            var score = 0;
+            //var canvas = document.getElementById('canvas');
+            //var context = canvas.getContext('2d');
+            var snake = new Snake();
 
-        $('#start').click(function(){
-            snake.start();
+            //Render();
+            snake.init();
+            snake.onEaten = function(){
+                score += 1;
+                $('#score').text(score);
+            };
+
+            $('#start').click(function(e){
+                e.preventDefault();
+
+                $('.start_page').hide();
+
+                setTimeout(function(){
+                    snake.start();
+                },1000);
+
+            });
+
+
+            var beans = $('.beans .bean');
+            beans.click(function(e){
+                e.preventDefault();
+
+                beans.removeClass('selected');
+                $(this).addClass('selected');
+
+                // 设置beans style
+
+
+
+            });
+
         });
-
 
 
     </script>

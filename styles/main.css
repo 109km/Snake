@@ -17,7 +17,7 @@
 .start_page .beans .bean{
     display: block;
     position: absolute;
-    top:234px;
+    top:160px;
     left:0;
     width: 140px;
     height: 216px;
@@ -39,19 +39,20 @@
 }
 
 .start_page .game_introduction{
-    margin:580px auto 0 auto;
-    width:580px;
+    position: absolute;
+    top:400px;
+    left:270px;
+    width:600px;
     height: 60px;
-    text-align: center;
     font-family: '微软雅黑';
     color:#344b07;
 }
 #canvas{
     width:956px;
-    height: 570px;
-    margin:13px 0 0 13px;
+    height: 522px;
+    margin:0px 0 0 13px;
 }
-#score{
+#score,#star_score{
     float: left;
     margin:23px 0 0 135px;
     font-family: Arial;
@@ -59,11 +60,14 @@
     font-weight: bold;
     color:#333;
 }
+#star_score{
+    margin-left:50px;
+}
 #start{
     display: block;
     position: absolute;
     left:311px;
-    top:468px;
+    top:510px;
     width: 360px;
     height: 70px;
     cursor: pointer;

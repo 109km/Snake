@@ -7,12 +7,12 @@
 
 var Config = {
     CANVAS: {
-        width: 980,
-        height: 589
+        width: 956,
+        height: 522
     },
     START_NUM : 4,
     SIZE: {
-        length: 55
+        length: 47
     },
     DIRECTION: {
         up: 0,
@@ -21,7 +21,9 @@ var Config = {
         left: 3
     },
     IMAGE: {
-        src: 'pics/dot.jpg'
+        filePath: 'pics/',
+        filePrefix:'dot',
+        fileType: '.gif'
     },
     FPS : 1000,
     SECONDS_BETWEEN_FRAMES : 1 / this.FPS,
@@ -31,7 +33,13 @@ var Config = {
 
 var canvas,
     context,
-    dot = new Image();
+    dot = new Image(),
+    dot_star = new Image(),
+    food_status = true,
+    food_dot = dot;
+
+dot_star.src = Config.IMAGE.filePath + Config.IMAGE.filePrefix
+    + '_star' + Config.IMAGE.fileType;
 
 canvas = document.getElementById('canvas');
 context = canvas.getContext('2d');
@@ -39,7 +47,6 @@ context = canvas.getContext('2d');
 canvas.width = Config.CANVAS.width;
 canvas.height = Config.CANVAS.height;
 
-dot.src = Config.IMAGE.src;
 
 /**
  *
@@ -58,12 +65,29 @@ function Node(x, y) {
  * @constructor
  * 食物
  */
+
+// TODO : 食物不能生成在蛇身里
 function Food(){
     var stepX = Config.CANVAS.width / Config.SIZE.length - 1;
     var stepY = Config.CANVAS.height / Config.SIZE.length - 1;
     var x = Math.ceil(Math.random() * stepX) * Config.SIZE.length;
     var y = Math.ceil(Math.random() * stepY) * Config.SIZE.length;
-    Node.apply(this,[x, y])
+
+    if ( !checkFood(x,y) ){
+
+    }
+
+    Node.apply(this,[x, y]);
+}
+
+function checkFood(x,y){
+    for (var i = 1; i < snake_body.length; i++)
+    {
+        if ( x === snake_body[i].x && y === snake_body[i].y)
+        {
+            return false;
+        }
+    }
 }
 
 /**
@@ -71,12 +95,34 @@ function Food(){
  * 绘制食物
  */
 Food.prototype._draw = function(){
-    context.drawImage(dot,this.x, this.y);
+
+
+    if ( food_status ){
+
+        var i = parseInt(Math.random() * 10);
+
+        if ( i > 7 ){
+            food_dot = dot_star;
+        }else{
+            food_dot = dot;
+        }
+
+        food_status = false;
+
+
+    }
+
+    context.drawImage(food_dot,this.x, this.y);
+
+
 }
 
 /**
  * @constructor
  */
+
+var snake_body = [];
+
 function Snake() {
     this.body = [];
     this.food = new Food();
@@ -91,9 +137,14 @@ function Snake() {
 /**
  * 初始化snake
  */
-Snake.prototype.init = function () {
+Snake.prototype.init = function (bean_style) {
     var x = Config.SIZE.length * 10;
     var y = Config.SIZE.length * 10;
+
+    var type = bean_style || '01';
+
+    dot.src = Config.IMAGE.filePath + Config.IMAGE.filePrefix
+        + type + Config.IMAGE.fileType;
 
     // 生成snake
     for (var i = 0; i < Config.START_NUM; i++) {
@@ -195,10 +246,19 @@ Snake.prototype._move = function () {
 
     // 吃到食物
     if(this.isEatenFood()){
-        if(this.onEaten){
-            this.onEaten.call(this);
+
+        var isStar = false;
+        if ( food_dot.src == dot_star.src ){
+            isStar = true;
         }
 
+
+        if(this.onEaten){
+            this.onEaten.call(this,isStar);
+        }
+        food_status = true;
+
+        snake_body.unshift(this.food);
         this.body.unshift(this.food);
         this.food = new Food();
     }

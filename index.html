@@ -8,18 +8,21 @@
 <body>
     <div id="main">
         <span id="score">0</span>
+        <span id="star_score">0</span>
         <canvas id="canvas"></canvas>
 
         <div class="start_page">
 
             <div class="beans">
-                <a class="bean bean01" href="javascript:;" bean_style="1"></a>
-                <a class="bean bean02" href="javascript:;" bean_style="2"></a>
-                <a class="bean bean03" href="javascript:;" bean_style="3"></a>
-                <a class="bean bean04" href="javascript:;" bean_style="4"></a>
+                <a class="bean bean01" href="javascript:;" bean_style="01"></a>
+                <a class="bean bean02" href="javascript:;" bean_style="02"></a>
+                <a class="bean bean03" href="javascript:;" bean_style="03"></a>
+                <a class="bean bean04" href="javascript:;" bean_style="04"></a>
             </div>
             <a id="start" href="javascript:;"></a>
             <div class="game_introduction">
+                游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
+                游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
                 游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
             </div>
         </div>
@@ -29,26 +32,38 @@
     <script>
 
         $(function(){
-            var score = 0;
+            var score = 0,
+                star_score = 0;
             //var canvas = document.getElementById('canvas');
             //var context = canvas.getContext('2d');
-            var snake = new Snake();
+            var snake = new Snake(),
+                bean_style = '01';
 
             //Render();
-            snake.init();
-            snake.onEaten = function(){
-                score += 1;
-                $('#score').text(score);
-            };
 
             $('#start').click(function(e){
                 e.preventDefault();
+
+                snake.init(bean_style);
+                snake.onEaten = function(isStar){
+
+
+                    if ( isStar ){
+                        star_score +=1 ;
+                        $('#star_score').text(star_score);
+                    }else{
+                        score += 1;
+                        $('#score').text(score);
+                    }
+
+                };
+
 
                 $('.start_page').hide();
 
                 setTimeout(function(){
                     snake.start();
-                },1000);
+                },500);
 
             });
 
@@ -61,8 +76,7 @@
                 $(this).addClass('selected');
 
                 // 设置beans style
-
-
+                bean_style = $(this).attr('bean_style');
 
             });
 

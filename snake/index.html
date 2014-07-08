@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snake</title>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <script src="scripts/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div id="main">
+        <span id="score">0</span>
+        <span id="start"></span>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        var score = 0;
+        //var canvas = document.getElementById('canvas');
+        //var context = canvas.getContext('2d');
+        var snake = new Snake();
+
+        //Render();
+        snake.init();
+        snake.onEaten = function(){
+            score += 1;
+            $('#score').text(score);
+        };
+
+        $('#start').click(function(){
+            snake.start();
+        });
+
+
+
+    </script>
+</body>
+</html>

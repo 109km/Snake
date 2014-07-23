@@ -7,12 +7,13 @@
 
 var Config = {
     CANVAS: {
-        width: 956,
-        height: 522
+        width: 960,
+        height: 520
     },
+    SNAKE_MAX_LENGTH: 312,
     START_NUM : 4,
     SIZE: {
-        length: 47
+        length: 40
     },
     DIRECTION: {
         up: 0,
@@ -23,7 +24,7 @@ var Config = {
     IMAGE: {
         filePath: 'pics/',
         filePrefix:'dot',
-        fileType: '.gif'
+        fileType: '.png'
     },
     FPS : 1000,
     SECONDS_BETWEEN_FRAMES : 1 / this.FPS,
@@ -66,18 +67,14 @@ function Node(x, y) {
  * 食物
  */
 
-// TODO : 食物不能生成在蛇身里
 function Food(){
     var stepX = Config.CANVAS.width / Config.SIZE.length - 1;
     var stepY = Config.CANVAS.height / Config.SIZE.length - 1;
     var x = Math.ceil(Math.random() * stepX) * Config.SIZE.length;
     var y = Math.ceil(Math.random() * stepY) * Config.SIZE.length;
 
-    if ( !checkFood(x,y) ){
-
-    }
-
     Node.apply(this,[x, y]);
+
 }
 
 function checkFood(x,y){
@@ -85,9 +82,11 @@ function checkFood(x,y){
     {
         if ( x === snake_body[i].x && y === snake_body[i].y)
         {
+
             return false;
         }
     }
+    return true;
 }
 
 /**
@@ -109,13 +108,12 @@ Food.prototype._draw = function(){
 
         food_status = false;
 
-
     }
 
     context.drawImage(food_dot,this.x, this.y);
 
 
-}
+};
 
 /**
  * @constructor
@@ -123,17 +121,45 @@ Food.prototype._draw = function(){
 
 var snake_body = [];
 
+
+
 function Snake() {
     this.body = [];
-    this.food = new Food();
+
+    this.food = this.createFood();
     this.direction = Config.DIRECTION.right;
     this.speed = 200;
 
     //event
     this.onEaten = null;
     this.onDie = null;
+    this.onSuccess = null;
 }
 
+Snake.prototype.createFood = function(){
+
+    var foodNode;
+
+    while( true ){
+
+        foodNode = new Food();
+
+        if (checkFood(foodNode.x,foodNode.y)){
+            return foodNode;
+            break;
+        }else{
+
+            if ( snake_body.length == Config.SNAKE_MAX_LENGTH ){
+                console.log('success');
+                this.onSuccess();
+                break;
+            }
+            console.log('fail');
+        }
+    }
+
+
+}
 /**
  * 初始化snake
  */
@@ -231,7 +257,6 @@ Snake.prototype._onDie = function(){
     }
     this.stop();
 }
-
 
 /**
  * snake移动

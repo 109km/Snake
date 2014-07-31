@@ -7,13 +7,13 @@
 
 var Config = {
     CANVAS: {
-        width: 960,
-        height: 520
+        width: 936,
+        height: 507
     },
     SNAKE_MAX_LENGTH: 312,
     START_NUM : 4,
     SIZE: {
-        length: 40
+        length: 39
     },
     DIRECTION: {
         up: 0,
@@ -100,7 +100,7 @@ Food.prototype._draw = function(){
 
         var i = parseInt(Math.random() * 10);
 
-        if ( i > 7 ){
+        if ( i >= 9 ){
             food_dot = dot_star;
         }else{
             food_dot = dot;
@@ -150,11 +150,9 @@ Snake.prototype.createFood = function(){
         }else{
 
             if ( snake_body.length == Config.SNAKE_MAX_LENGTH ){
-                console.log('success');
                 this.onSuccess();
                 break;
             }
-            console.log('fail');
         }
     }
 

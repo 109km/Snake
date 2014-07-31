@@ -9,6 +9,7 @@
     <div id="main">
         <span id="score">0</span>
         <span id="star_score">0</span>
+        <a class="btn_stop" id="action" href="javascript:;"></a>
         <canvas id="canvas"></canvas>
 
         <div class="start_page">
@@ -20,12 +21,32 @@
                 <a class="bean bean04" href="javascript:;" bean_style="04"></a>
             </div>
             <a id="start" href="javascript:;"></a>
+            <iframe class="btn_follow btn_followed" id="btn_follow" src="http://open.qzone.qq.com/like?url=http%3A%2F%2Fuser.qzone.qq.com%2F1405248419&type=button&width=400&height=30&style=3" allowtransparency="true" scrolling="no" border="0" frameborder="0" style="width:400px;height:30px;border:none;overflow:hidden;"></iframe>
             <div class="game_introduction">
                 游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
                 游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
                 游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明游戏说明
             </div>
         </div>
+
+        <div class="end_page">
+            <span class="bean_num">0</span>
+            <span class="star_num">0</span>
+
+            <div class="share_text">
+                恭喜吃到<b class="eat_num">XX</b>颗豆子，获得<b class="eat_score">XXX</b>积分，
+                打败贴吧<b class="eat_rate">XX</b>%的小伙伴！
+            </div>
+
+            <div class="share">
+                <a class="kongjian" href="javascript:;"></a>
+                <a class="sina" href="javascript:;"></a>
+                <a class="txwb" href="javascript:;"></a>
+                <a class="baidu" href="javascript:;"></a>
+            </div>
+
+        </div>
+
     </div>
 
     <script src="scripts/main.js"></script>
@@ -60,7 +81,21 @@
 
 
                 snake.onDie = function(){
-                    alert('啊哦，你挂了呃');
+
+                    $('.bean_num').text($('#score').text());
+                    $('.star_num').text($('#star_score').text());
+
+                    $('.end_page').show();
+
+
+
+                    $('.end_page').find('a').click(function(e){
+
+                        shareHandler($(this).attr('class'));
+
+                    });
+
+
                 };
 
                 $('.start_page').hide();
@@ -83,6 +118,97 @@
                 bean_style = $(this).attr('bean_style');
 
             });
+
+
+            $('#action').click(function(e){
+                e.preventDefault();
+
+                if ( $(this).hasClass('btn_start') ){
+                    $(this).removeClass('btn_start').addClass('btn_stop');
+                    snake.start();
+                }else{
+                    $(this).removeClass('btn_stop').addClass('btn_start');
+                    snake.stop();
+                }
+
+            });
+
+
+            var shareHandler = function (target) {
+
+                var isTouch = "ontouchstart" in window;
+                var inPC = (window.OneRingRequest !== undefined) && (window.OneRingStreaming !== undefined); //PC client
+                switch (target) {
+                    case 'txwb':
+                        if (!isTouch && !inPC) {
+                            var newwindow = window.open("about:blank", '分享到腾讯微博', 'width=600,height=400');
+                        }
+                        break;
+                    case 'kongjian':
+                        if (!isTouch && !inPC) {
+                            var newwindow = window.open("about:blank", '分享到QQ空间', 'width=600,height=400');
+                        }
+                        break;
+                    case 'sina':
+                        if (!isTouch && !inPC) {
+                            var newwindow = window.open("about:blank", '分享到新浪微博', 'width=600,height=400');
+                        }
+                        break;
+                    case 'baidu':
+                        if (!isTouch && !inPC) {
+                            var newwindow = window.open("about:blank", '分享到百度贴吧', 'width=600,height=600');
+                        }
+                        break;
+                }
+
+                var isTouch = "ontouchstart" in window;
+                var inPC = (window.OneRingRequest !== undefined) && (window.OneRingStreaming !== undefined); //PC client
+                var url = encodeURIComponent('http://tieba.baidu.com/f?kw=%CD%E3%B6%B9%BC%D4'),
+                    title = encodeURIComponent('你有木有自己的专属神兽头像？'),
+                    desc = encodeURIComponent('换上专属神兽豌小豆头像，角逐豌豆荚激烈的抢楼大战。连续两周，每晚 20:00 带着你的专属神兽豌小豆头像抢楼，不抢不散！'),
+                    pic_url = 'about:blank';
+
+                switch (target) {
+                    case 'txwb':
+                        var url = 'http://share.v.t.qq.com/index.php?c=share&a=index&url='+url+'&appkey=801476866&assname=&title=' + desc + '&pic=' + pic_url;
+                        if (isTouch || inPC) {
+                            window.location.href = url;
+                        } else {
+                            newwindow.location.href = url;
+                            newwindow.focus();
+                        }
+                        break;
+                    case 'kongjian':
+                        var url = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+ url +'&summary=' + desc + '&title=' + title + '&pics=' + pic_url;
+                        if (isTouch || inPC) {
+                            window.location.href = url;
+                        } else {
+                            newwindow.location.href = url;
+                            newwindow.focus();
+                        }
+                        break;
+                    case 'sina':
+                        var url = 'http://service.weibo.com/share/share.php?url='+url+'&type=button&ralateUid=1727978503&language=zh_cn&appkey=3017506897&title=' + desc + '&searchPic=false&style=number&sudaref=service.weibo.com&pic=' + pic_url;
+                        if (isTouch || inPC) {
+                            window.location.href = url;
+                        } else {
+                            newwindow.location.href = url;
+                            newwindow.focus();
+                        }
+                        break;
+                    case 'baidu':
+                        var url = 'http://tieba.baidu.com/f/commit/share/openShareApi?url=' + url +'&title=' + title + '&desc=' + desc + '&pic=' + pic_url;
+                        if (isTouch || inPC) {
+                            window.location.href = url;
+                        } else {
+                            newwindow.location.href = url;
+                            newwindow.focus();
+                        }
+                        break;
+                }
+
+            };
+
 
         });
 

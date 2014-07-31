@@ -2,17 +2,17 @@
     background: url(../pics/bg.jpg) no-repeat;
     margin: 0 auto;
     position: relative;
-    width: 980px;
-    height: 660px;
+    width: 960px;
+    height: 600px;
 }
 .start_page{
     position: absolute;
     top:0px;
     left:0px;
     z-index: 10;
-    width: 980px;
+    width: 960px;
     height: 660px;
-    background:url(../pics/start_page.jpg) no-repeat 0 0 #91ecaf;
+    background:url(../pics/start_page.jpg) no-repeat -10px 0 #91ecaf;
 }
 .start_page .beans .bean{
     display: block;
@@ -23,16 +23,16 @@
     height: 216px;
 }
 .start_page .beans .bean01{
-    left:107px;
+    left:100px;
 }
 .start_page .beans .bean02{
-    left:315px;
+    left:307px;
 }
 .start_page .beans .bean03{
-    left:521px;
+    left:514px;
 }
 .start_page .beans .bean04{
-    left:726px;
+    left:719px;
 }
 .start_page .beans .selected{
     border:1px solid #f00;
@@ -48,21 +48,47 @@
     color:#344b07;
 }
 #canvas{
-    width:956px;
-    height: 522px;
-    margin:0px 0 0 13px;
+    width:936px;
+    height: 507px;
+    margin:13px 0 0 13px;
 }
 #score,#star_score{
     float: left;
-    margin:23px 0 0 135px;
-    font-family: Arial;
+    display: block;
+    width: 60px;
+    margin: 9px 0 12px 130px;
     font-size: 40px;
     font-weight: bold;
-    color:#333;
+    color:#ecde33;
+    font-family: fantasy;
 }
 #star_score{
-    margin-left:50px;
+    margin-left:88px;
 }
+#btn_follow{
+    position: absolute;
+    top:400px;
+    left:150px;
+    display: block;
+    width: 86px;
+    height: 86px;
+
+}
+
+#action{
+    display: block;
+    width: 38px;
+    height: 49px;
+    float: left;
+    margin: 10px 0 0 160px;
+}
+.btn_start{
+    background: url(../pics/btn_start.jpg) no-repeat 0 0 transparent;
+}
+.btn_stop{
+    background: url(../pics/btn_stop.jpg) no-repeat 0 0 transparent;
+}
+
 #start{
     display: block;
     position: absolute;
@@ -75,4 +101,51 @@
 p{
     float: left;
     margin-left: 30px;
+}
+
+.end_page{
+    display: none;
+    background: url(../pics/end_page.jpg) no-repeat -10px 0 transparent;
+    position: absolute;
+    top:0px;
+    left:0px;
+    z-index: 10;
+    width: 960px;
+    height: 601px;
+}
+
+.bean_num,.star_num{
+    position: absolute;
+    top:54px;
+    left:377px;
+    font-size: 64px;
+    color:#ecde33;
+    font-family: fantasy;
+}
+.star_num{
+    left:680px;
+}
+
+.share_text{
+    position: absolute;
+    top:275px;
+    left:210px;
+    width:570px;
+    color:#334a06;
+    font-size: 32px;
+    font-weight: bold;
+    font-family: '微软雅黑','黑体';
+}
+.end_page .share{
+    position: absolute;
+    left:490px;
+    top:415px;
+    width: 300px;
+}
+.end_page .share a{
+    display: block;
+    width: 50px;
+    height: 50px;
+    float: left;
+    margin-right: 15px;
 }
